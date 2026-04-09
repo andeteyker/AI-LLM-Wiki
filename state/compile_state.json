@@ -1,0 +1,59 @@
+{
+  "source_hashes": {
+    "example-seed-1": "10983006abd12f3d814e727de065fdddef8b583f9b3f9f9e8b9dc29fa13a34e0",
+    "example-seed-2": "c9f44cfe3b8a52d12a314ef37b9fd36728b2cc9aef342a7e2178ebe27310c2c2",
+    "text-9d3deecbd171": "9d3deecbd1711b3c8b0712970d4210a356230336532cbb74a4d52102dd4ea48d"
+  },
+  "source_to_pages": {
+    "example-seed-1": [
+      "wiki/sources/source-example-seed-1.md",
+      "wiki/concepts/decision-record-decision.md",
+      "wiki/concepts/obsidian.md",
+      "wiki/concepts/open-questions-should.md",
+      "wiki/concepts/preference.md",
+      "wiki/concepts/project-atlas.md",
+      "wiki/concepts/project-atlas-project-atlas.md",
+      "wiki/concepts/speculation-maybe.md",
+      "wiki/concepts/tasks-task.md"
+    ],
+    "example-seed-2": [
+      "wiki/sources/source-example-seed-2.md",
+      "wiki/concepts/atlas.md",
+      "wiki/concepts/learning-topics.md",
+      "wiki/concepts/learning-topics-incremental.md",
+      "wiki/concepts/people.md",
+      "wiki/concepts/people-and-relationships.md",
+      "wiki/concepts/relationships-alice.md"
+    ],
+    "text-9d3deecbd171": [
+      "wiki/sources/source-text-9d3deecbd171.md",
+      "wiki/concepts/decision.md",
+      "wiki/concepts/fridays.md",
+      "wiki/concepts/preference.md",
+      "wiki/concepts/text-capture.md",
+      "wiki/concepts/text-capture-captured.md"
+    ]
+  },
+  "concept_to_page": {
+    "decision-record-decision": "wiki/concepts/decision-record-decision.md",
+    "obsidian": "wiki/concepts/obsidian.md",
+    "open-questions-should": "wiki/concepts/open-questions-should.md",
+    "preference": "wiki/concepts/preference.md",
+    "project-atlas": "wiki/concepts/project-atlas.md",
+    "project-atlas-project-atlas": "wiki/concepts/project-atlas-project-atlas.md",
+    "speculation-maybe": "wiki/concepts/speculation-maybe.md",
+    "tasks-task": "wiki/concepts/tasks-task.md",
+    "atlas": "wiki/concepts/atlas.md",
+    "learning-topics": "wiki/concepts/learning-topics.md",
+    "learning-topics-incremental": "wiki/concepts/learning-topics-incremental.md",
+    "people": "wiki/concepts/people.md",
+    "people-and-relationships": "wiki/concepts/people-and-relationships.md",
+    "relationships-alice": "wiki/concepts/relationships-alice.md",
+    "decision": "wiki/concepts/decision.md",
+    "fridays": "wiki/concepts/fridays.md",
+    "text-capture": "wiki/concepts/text-capture.md",
+    "text-capture-captured": "wiki/concepts/text-capture-captured.md"
+  },
+  "page_hashes": {},
+  "last_compile_at": "2026-04-09T11:28:52+00:00"
+}
