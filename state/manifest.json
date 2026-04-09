@@ -1,0 +1,14 @@
+{
+  "sources": {
+    "text-9d3deecbd171": {
+      "source_id": "text-9d3deecbd171",
+      "original": "inline-text",
+      "raw_path": "raw/text-9d3deecbd171.md",
+      "source_type": "text",
+      "sha256": "9d3deecbd1711b3c8b0712970d4210a356230336532cbb74a4d52102dd4ea48d",
+      "ingested_at": "2026-04-09 11:28:52.398121+00:00",
+      "normalized_format": "markdown",
+      "truncated": false
+    }
+  }
+}
