@@ -1,47 +1,76 @@
-# AI-OS v1 Scaffold
+# AI-OS v1 — Local Knowledge Operating System
 
-Local-first AI-OS scaffold for personal knowledge management, inbox processing, and assistant workflows.
+AI-OS ist ein lokal-first System, das Dateien in strukturierte Wissenseinträge kompiliert und über API/UI such- und nutzbar macht.
 
-## Goals for v1
-- Chat over own knowledge
-- Wiki-style knowledge base
-- Dashboard with inbox
-- Safe local-first operation
-- Structured storage in Markdown + JSON metadata
+## Architektur (aktuell)
+- **Foundation:** zentrale Settings, Runtime-Bootstrap, strukturiertes Logging/Audit
+- **Ingestion:** Parser-Registry + Parser (txt/md/json/csv/pdf + image/excel stubs)
+- **Knowledge Core:** RawDocument -> KnowledgeEntry Compiler, Markdown/JSON Storage, Index/Relations
+- **Search/Chat:** Filter-Suche + Retrieval-basierte Chat-Antworten, optionale Ollama-Anreicherung
+- **Dashboard/Review:** täglicher Report, offene/problematische Dinge, Empfehlungen
+- **Tasks/Events/People/Projects:** extrahierte Objekte und Indizes
+- **Safety:** Duplikaterkennung, Organizer-Vorschläge (Safe Mode), Undo-Stack, Trash-Mechanik
+- **Adaptive Layer:** persistente Präferenzen und Feedback-Hooks
 
-## Tech choices for v1
-- Python 3.11+
-- FastAPI backend
-- Streamlit web UI
-- Local storage in files
-- Optional Ollama integration
-
-## Project structure
-- `app/agents/` orchestration roles
-- `app/api/` backend routes
-- `app/core/` settings, logging, schemas
-- `app/ingestion/` file ingestion and parsing
-- `app/knowledge/` knowledge compiler and index
-- `app/tasks/` tasks and event extraction
-- `app/dashboard/` report/dashboard helpers
-- `app/ui/` Streamlit interface
-- `data/` runtime storage
-- `config/` yaml/json config files
-
-## Quick start
+## Setup
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-# or .venv\\Scripts\\activate on Windows
-pip install -e .
-copy .env.example .env  # Windows
-# or cp .env.example .env
+source .venv/bin/activate
+pip install -e .[dev]
+cp .env.example .env
+```
+
+## Start
+Backend:
+```bash
+uvicorn app.api.main:app --reload
+```
+
+UI:
+```bash
 streamlit run app/ui/Home.py
 ```
 
-## Next implementation steps
-1. Wire settings and paths
-2. Implement ingest pipeline for txt/md/pdf/json/csv
-3. Write knowledge entries as markdown + metadata json
-4. Add search/index
-5. Add chat over knowledge and Ollama integration
+CLI Ingestion:
+```bash
+python scripts/ingest_file.py /pfad/zur/datei.txt
+```
+
+## API Überblick
+- `GET /health`
+- `POST /ingest`
+- `GET /search`
+- `POST /chat`
+- `GET /dashboard`
+- `GET /daily-report`
+- `GET /inbox`
+- `GET /tasks`
+- `GET /events`
+- `GET /people`
+- `GET /projects`
+- `GET /duplicates`
+- `GET /undo`
+- `GET/POST /preferences`
+- `GET /behavior-rules`
+- `POST /feedback`
+
+## Datenfluss
+1. Datei in Inbox importieren (Copy + Hash)
+2. Parser erzeugt `RawDocument`
+3. Compiler erzeugt `KnowledgeEntry`
+4. Storage schreibt Markdown + JSON + Index
+5. Task/Event/People/Project-Indizes werden aktualisiert
+6. Dashboard/Review/Search/Chat greifen auf Index + Objektspeicher zu
+
+## Offene Punkte
+- Reprocess/Approve UI für Inbox ist als nächste Iteration vorgesehen.
+- LLM-gestützte Extraktion ist derzeit nur als Hook vorbereitet.
+- Fortgeschrittenes Ranking/semantische Suche kann erweitert werden.
+
+## Nächste Schritte
+- zusätzliche Tests für Safe-Mode-Organizer/Undo/Feedback-Flows
+- bessere Datums-Parser für Events
+- projektbezogene Knowledge-Seiten automatisiert generieren
+- optionaler Versandkanal für Daily Reports (noch nicht integriert)
+
+Siehe auch: `REUSE_AUDIT.md`.

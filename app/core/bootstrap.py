@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 
 from app.core.logging import configure_logging
@@ -11,11 +13,12 @@ def ensure_runtime_layout() -> None:
         settings.knowledge_dir,
         settings.logs_dir,
         settings.trash_dir,
-        settings.base_dir / "memory",
-        settings.base_dir / "cache",
+        settings.memory_dir,
+        settings.cache_dir,
     ]
     for path in required:
         Path(path).mkdir(parents=True, exist_ok=True)
+
     for name in [
         "arbeit",
         "privat",
@@ -28,4 +31,5 @@ def ensure_runtime_layout() -> None:
         "archiv",
     ]:
         (settings.knowledge_dir / name).mkdir(parents=True, exist_ok=True)
+
     configure_logging(settings.logs_dir, settings.log_level)
