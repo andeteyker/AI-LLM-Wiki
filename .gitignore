@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.streamlit/secrets.toml
+node_modules/
+.pytest_cache/
+.coverage
+htmlcov/
+.DS_Store
+Thumbs.db
+data/memory/*
+data/cache/*
+data/logs/*
+!data/logs/.gitkeep
+data/trash/*
+!data/trash/.gitkeep

@@ -1,0 +1,10 @@
+app_name: AI-OS
+safe_mode: true
+watched_paths: []
+knowledge:
+  write_markdown: true
+  write_metadata_json: true
+  create_relations_index: true
+ui:
+  theme: dark
+  start_page: chat

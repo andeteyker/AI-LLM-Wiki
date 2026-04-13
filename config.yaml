@@ -1,9 +1,0 @@
-project_name: "Personal LLM Wiki Compiler"
-llm:
-  provider: "openai-compatible"
-  base_url: "http://localhost:11434/v1"
-  model: "llama3.1"
-  api_key_env: "OPENAI_API_KEY"
-  enabled: false
-max_source_chars: 12000
-watch_interval_seconds: 2

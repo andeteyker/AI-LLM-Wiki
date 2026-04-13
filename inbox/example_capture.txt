@@ -1,6 +1,0 @@
-Project Atlas kickoff notes.
-We prefer local-first tooling and markdown portability.
-Open question: should we use BM25 now or later?
-Decision: start deterministic and add embeddings plugin later.
-Task: draft lint policy.
-Speculative idea: daily digest automation.
