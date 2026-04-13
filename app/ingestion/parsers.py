@@ -1,46 +1,109 @@
 from __future__ import annotations
 
-from pathlib import Path
-import json
 import csv
+import json
+from pathlib import Path
+from uuid import uuid4
+
+from app.core.schemas import RawDocument, SourceReference
+from app.ingestion.framework import BaseParser, ParserRegistry
 
 
-def parse_text_file(path: Path) -> str:
-    return path.read_text(encoding="utf-8", errors="ignore")
+def _build_raw(title: str, content: str, source: SourceReference, detected: str, tags: list[str]) -> RawDocument:
+    return RawDocument(
+        id=str(uuid4()),
+        title=title,
+        content=content,
+        source=source,
+        detected_types=[detected],
+        tags=tags,
+    )
 
 
-def parse_json_file(path: Path) -> str:
-    return json.dumps(json.loads(path.read_text(encoding="utf-8")), indent=2, ensure_ascii=False)
+class TextParser(BaseParser):
+    name = "text"
+    supported_suffixes = {".txt", ".md", ".log", ".py", ".js", ".ts", ".yaml", ".yml"}
+
+    def parse(self, path: Path, source: SourceReference) -> RawDocument:
+        content = path.read_text(encoding="utf-8", errors="ignore")
+        return _build_raw(path.stem, content, source, "text", [path.suffix.lower().lstrip(".")])
 
 
-def parse_csv_file(path: Path) -> str:
-    rows: list[str] = []
-    with path.open("r", encoding="utf-8", errors="ignore", newline="") as f:
-        reader = csv.reader(f)
-        for row in reader:
-            rows.append(" | ".join(row))
-    return "\n".join(rows)
+class JsonParser(BaseParser):
+    name = "json"
+    supported_suffixes = {".json"}
+
+    def parse(self, path: Path, source: SourceReference) -> RawDocument:
+        content = json.dumps(json.loads(path.read_text(encoding="utf-8")), indent=2, ensure_ascii=False)
+        return _build_raw(path.stem, content, source, "json", ["json"])
 
 
-def parse_pdf_file(path: Path) -> str:
-    try:
-        from pypdf import PdfReader
-    except ImportError as exc:
-        raise RuntimeError("PDF support not installed. Install with: pip install -e .[pdf]") from exc
+class CsvParser(BaseParser):
+    name = "csv"
+    supported_suffixes = {".csv"}
 
-    reader = PdfReader(str(path))
-    texts = [page.extract_text() or "" for page in reader.pages]
-    return "\n\n".join(texts)
+    def parse(self, path: Path, source: SourceReference) -> RawDocument:
+        rows: list[str] = []
+        with path.open("r", encoding="utf-8", errors="ignore", newline="") as file:
+            reader = csv.reader(file)
+            for row in reader:
+                rows.append(" | ".join(row))
+        return _build_raw(path.stem, "\n".join(rows), source, "csv", ["csv"])
 
 
-def parse_file(path: Path) -> str:
-    suffix = path.suffix.lower()
-    if suffix in {".txt", ".md", ".log", ".py", ".js", ".ts", ".yaml", ".yml"}:
-        return parse_text_file(path)
-    if suffix == ".json":
-        return parse_json_file(path)
-    if suffix == ".csv":
-        return parse_csv_file(path)
-    if suffix == ".pdf":
-        return parse_pdf_file(path)
-    return ""
+class PdfParser(BaseParser):
+    name = "pdf"
+    supported_suffixes = {".pdf"}
+
+    def parse(self, path: Path, source: SourceReference) -> RawDocument:
+        try:
+            from pypdf import PdfReader
+        except ImportError as exc:
+            raise RuntimeError("PDF support not installed. Install with: pip install -e .[pdf]") from exc
+
+        reader = PdfReader(str(path))
+        content = "\n\n".join(page.extract_text() or "" for page in reader.pages)
+        return _build_raw(path.stem, content, source, "pdf", ["pdf"])
+
+
+class ImageMetadataParser(BaseParser):
+    name = "image_stub"
+    supported_suffixes = {".png", ".jpg", ".jpeg", ".webp"}
+
+    def parse(self, path: Path, source: SourceReference) -> RawDocument:
+        stat = path.stat()
+        content = f"Image file: {path.name}\nSize: {stat.st_size} bytes"
+        return _build_raw(path.stem, content, source, "image", ["image"])
+
+
+class ExcelMetadataParser(BaseParser):
+    name = "excel_stub"
+    supported_suffixes = {".xlsx", ".xls"}
+
+    def parse(self, path: Path, source: SourceReference) -> RawDocument:
+        stat = path.stat()
+        content = f"Excel file: {path.name}\nSize: {stat.st_size} bytes"
+        return _build_raw(path.stem, content, source, "excel", ["excel"])
+
+
+class FallbackParser(BaseParser):
+    name = "fallback"
+    supported_suffixes = set()
+
+    def can_parse(self, path: Path) -> bool:
+        return True
+
+    def parse(self, path: Path, source: SourceReference) -> RawDocument:
+        return _build_raw(path.stem, "", source, "unknown", ["unknown"])
+
+
+def build_default_registry() -> ParserRegistry:
+    registry = ParserRegistry()
+    registry.register(TextParser())
+    registry.register(JsonParser())
+    registry.register(CsvParser())
+    registry.register(PdfParser())
+    registry.register(ImageMetadataParser())
+    registry.register(ExcelMetadataParser())
+    registry.register(FallbackParser())
+    return registry
